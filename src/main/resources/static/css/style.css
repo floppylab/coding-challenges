@@ -11,8 +11,9 @@ body {
 }
 
 main {
-	width: 800px;
-	margin: 0 auto;
+	max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 header {
@@ -33,6 +34,37 @@ h1, h2, h3 {
 
 a, a:link, a:visited {
     color: #a7dcd2;
+}
+
+form {
+	text-align: center;
+}
+
+label {
+    min-width: 200px;
+    display: inline-block;
+    text-align: left;
+}
+
+input {
+    width: 200px;
+    border: none;
+    background-color: #f0f8ff;
+    padding: 3px 5px;
+    margin: 5px;
+    font-family: 'Poor Story', cursive;
+    font-size: 80%;
+    color: #009688;
+}
+
+button {
+	border: none;
+    padding: 5px 40px;
+    font-family: 'Poor Story', cursive;
+    font-size: 80%;
+    color: #f0f8ff;
+    background: #009688;
+    margin-top: 15px;
 }
 
 .image-wrapper {

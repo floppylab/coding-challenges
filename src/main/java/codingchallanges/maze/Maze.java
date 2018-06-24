@@ -57,9 +57,9 @@ public class Maze {
 	   })
 	private Position me;
 	
-	public Maze() {
-		
-	}
+	private String username;
+	
+	public Maze() {}
 	
 	public Maze(Integer size) {
 		this.size = size;

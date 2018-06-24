@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
-@Table(name="user")
+@Table(name="basic_user")
 @EqualsAndHashCode(of = "username")
 public class BasicUser implements Serializable {
 	

@@ -1,22 +1,31 @@
-<html>
-<body>
-	<h1>register</h1>
-	<form action="/registration" th:object="${user}" method="POST" enctype="utf8">
-		<div>
-			<label>username</label> <input th:field="*{username}" />
-			<p th:each="error : ${#fields.errors('username')}" th:text="${error}">error</p>
-		</div>
+<!DOCTYPE html>
+<html lang="hu">
+	<head th:replace="fragments/header :: header('coding challanges - registration')" />
+	<body>
+		<header>
+			<hr/>
+		</header>
 		
-		<div>
-			<label>password</label> <input type="password" th:field="*{password}" />
-			<p th:each="error : ${#fields.errors('password')}" th:text="${error}">error</p>
-		</div>
-		
-		<div>
-			<label>confirm password</label> <input type="password" th:field="*{matchingPassword}" />
-		</div>
-		
-		<button type="submit">register</button>
-	</form>
-</body>
+		<main>
+			<h1>register</h1>
+			<form action="/registration" th:object="${user}" method="POST" enctype="utf8">
+				<div>
+					<label>username</label> <input th:field="*{username}" />
+					<p th:each="error : ${#fields.errors('username')}" th:text="${error}">error</p>
+				</div>
+				
+				<div>
+					<label>password</label> <input type="password" th:field="*{password}" />
+					<p th:each="error : ${#fields.errors('password')}" th:text="${error}">error</p>
+				</div>
+				
+				<div>
+					<label>confirm password</label> <input type="password" th:field="*{matchingPassword}" />
+				</div>
+				
+				<button type="submit">register</button>
+			</form>
+		</main>
+		<footer th:replace="fragments/footer :: footer"></footer>
+	</body>
 </html>

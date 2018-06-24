@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import codingchallanges.common.Direction;
 import codingchallanges.common.Position;
+import codingchallanges.config.security.SecurityService;
 import codingchallanges.exception.ClientException;
 
 @Service
@@ -22,6 +23,9 @@ public class MazeServiceImpl implements MazeService {
 	
 	@Autowired
 	private MazeRepository mazeRepository;
+	
+	@Autowired
+	private SecurityService securityService;
 	
 	@Override
 	public Maze findMaze(Long id) {
@@ -38,6 +42,7 @@ public class MazeServiceImpl implements MazeService {
 	@Override
 	public Maze createMaze() {
 		Maze maze = MazeGenerator.generateMaze();
+		maze.setUsername(securityService.username());
 		mazeRepository.save(maze);
 		logger.error(maze.toString());
 		
@@ -63,6 +68,7 @@ public class MazeServiceImpl implements MazeService {
 	@Override
 	public Map<Direction, MazeCellType> getSteps(Long id) {
 		Maze maze = mazeRepository.getOne(id);
+		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		
 		Position me = maze.getMe();
@@ -76,7 +82,7 @@ public class MazeServiceImpl implements MazeService {
 				steps.put(direction, cell.getType());
 			}
 		}
-		logger.error(maze.toString());
+		// logger.error(maze.toString());
 		return steps;		
 	}
 
@@ -84,6 +90,7 @@ public class MazeServiceImpl implements MazeService {
 	public void step(Long id, Direction direction) {
 		if(direction == Direction.ON) return;	// do nothing
 		Maze maze = mazeRepository.getOne(id);
+		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		
 		Position me = maze.getMe();
@@ -102,6 +109,7 @@ public class MazeServiceImpl implements MazeService {
 	public void pickUpCoin(Long id) {
 		Maze maze = mazeRepository.getOne(id);
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
+		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
 		
 		MazeCell me = maze.getCell(maze.getMe());
 		if(me.isCoin()) {
@@ -117,6 +125,7 @@ public class MazeServiceImpl implements MazeService {
 	public void giveUp(Long id) {
 		Maze maze = mazeRepository.getOne(id);
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
+		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
 		
 		maze.setStatus(Status.GAVE_UP);
 		maze.setFinishTime(new Date());
@@ -129,7 +138,7 @@ public class MazeServiceImpl implements MazeService {
 			maze.setFinishTime(new Date());
 		}
 		maze.setMe(newPosition);
-		logger.error(maze.toString());
+		// logger.error(maze.toString());
 		mazeRepository.save(maze);
 	}
 
@@ -159,7 +168,7 @@ public class MazeServiceImpl implements MazeService {
 			}
 		}
 		mazeRepository.save(maze);
-		logger.error(maze.toString());
+		// logger.error(maze.toString());
 		throw new ClientException("you bumped right into a wall or a closed door");
 	}
 

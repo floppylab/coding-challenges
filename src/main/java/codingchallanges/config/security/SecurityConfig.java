@@ -40,7 +40,7 @@ public class SecurityConfig {
 			http.authorizeRequests()
 			.antMatchers("/", "/challanges/**").permitAll()
 	        .antMatchers("/registration").permitAll()
-	        .antMatchers("/swagger-ui.html", "/swagger").permitAll()
+	        .antMatchers("/swagger-ui.html", "/swagger", "/webjars/**").permitAll()
 	        .antMatchers("/swagger-resources/**").permitAll()
 	        .antMatchers("/css/**").permitAll()
 	        .antMatchers("/img/**").permitAll()
