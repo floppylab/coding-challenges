@@ -68,7 +68,7 @@ public class MazeServiceImpl implements MazeService {
 	@Override
 	public Map<Direction, MazeCellType> getSteps(Long id) {
 		Maze maze = mazeRepository.getOne(id);
-		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
+		if(!maze.getUsername().equals(securityService.username())) throw new ClientException("you are not in this maze");
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		
 		Position me = maze.getMe();
@@ -90,7 +90,7 @@ public class MazeServiceImpl implements MazeService {
 	public void step(Long id, Direction direction) {
 		if(direction == Direction.ON) return;	// do nothing
 		Maze maze = mazeRepository.getOne(id);
-		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
+		if(!maze.getUsername().equals(securityService.username())) throw new ClientException("you are not in this maze");
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		
 		Position me = maze.getMe();
@@ -109,7 +109,7 @@ public class MazeServiceImpl implements MazeService {
 	public void pickUpCoin(Long id) {
 		Maze maze = mazeRepository.getOne(id);
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
-		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
+		if(!maze.getUsername().equals(securityService.username())) throw new ClientException("you are not in this maze");
 		
 		MazeCell me = maze.getCell(maze.getMe());
 		if(me.isCoin()) {
@@ -125,7 +125,7 @@ public class MazeServiceImpl implements MazeService {
 	public void giveUp(Long id) {
 		Maze maze = mazeRepository.getOne(id);
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
-		if(maze.getUsername() != securityService.username()) throw new ClientException("you are not in this maze");
+		if(!maze.getUsername().equals(securityService.username())) throw new ClientException("you are not in this maze");
 		
 		maze.setStatus(Status.GAVE_UP);
 		maze.setFinishTime(new Date());
