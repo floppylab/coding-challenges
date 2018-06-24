@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="hu">
+	<head th:replace="fragments/header :: header('coding challanges-maze')" />
+	<body>
+		<header>
+			<hr/>
+		</header>
+	
+		<main>
+			<h1>cretan maze</h1>
+			
+			<section>
+				<p>
+					you are in a cretan maze and to get out you will have to find the 3 golden coins. 
+					it is dark inside and you the only thing you have with you is a torch burning for 1 hour. 
+					it lights up only a small area around you and if you bump into a wall you lose all the coins you've already collected.
+					if it burns out you lose the game, but you can give it up anytime you want.
+					you will win only if you find the coins and you get out of the maze through the exit.
+				</p>
+				<p class="image-wrapper">
+					<img id="torch" th:src="@{/img/torch.png}" alt="torch" />
+				</p>
+			</section>
+			
+			<section>
+				<h2>how to not "maze over"?</h2>
+				<p>
+					there is an API though you can control your steps, but you can only access it if you have already registered 
+					(if not please <a th:href="@{/registration}">register here</a>). 
+					the API is secured with a HTTP basic authentication, so do not forget to include your credentials with every API call.
+					for your convenience i also generated a swagger documentation which you can check out <a th:href="@{/swagger}">here</a>.
+					of course you can use any any programming language you want. 
+				</p>
+				<article>
+					<h3>- create a maze -</h3>
+					<small>POST - /api/mazes</small>
+					<p>
+						making a post call with an empty body will let you start the maze. you will find yourself at the entrance. 
+						as a response you will get the id of your maze.
+						this is when the door is closed behind you and you light your torch so your 3600 seconds starts
+					</p>
+				</article>
+				
+				<article>
+					<h3>- get info -</h3>
+					<small>GET - /api/mazes/{id}</small>
+					<p>
+						you can get some general data about your maze.
+						you will see the number of coins you collected, the bumps you made, the seconds you have left and a status.
+						you will also be able to check the time you started the maze.
+					</p>
+				</article>
+				
+				<article>
+					<h3>- get cells around you -</h3>
+					<small>GET - /api/mazes/{id}/steps</small>
+					<p>
+						with your torch you can see the cells around you. there are 5 directions (NORTH, EAST, SOUTH, WEST, ON) 
+						and 5 different cell types (EMPTY, COIN, WALL, ENTRANCE, EXIT).
+						it will return the same cells as long as you are at the same position.
+					</p>
+				</article>
+				
+				<article>
+					<h3>- step -</h3>
+					<small>POST - /api/mazes/{id}/steps</small>
+					<p>
+						put a direction into the request body (NORTH, EAST, SOUTH, WEST, ON) and you made your step. 
+						do not forget that if you bump into a wall, you will lose all the coins you've already collected.
+						to finish the game you will have to step to the exit.
+					</p>
+				</article>
+				
+				<article>
+					<h3>- pick up a coin -</h3>
+					<small>POST - /api/mazes/{id}/coins</small>
+					<p>
+						if you are standing on a coin you can pick it up. 
+						to be able to see the exit you will have to collect 3 coins.
+					</p>
+				</article>
+				
+				<article>
+					<h3>- give up -</h3>
+					<small>DELETE - /api/mazes/{id}</small>
+					<p>
+						if you feel that you will not be able to get out of the maze in time then you can give up.
+						you can do this any time you want.
+					</p>
+				</article>
+			</section>
+			
+			<section>
+				<h2>example maze</h2>
+				<p class="image-wrapper">
+					<img th:src="@{/img/example-maze.png}" alt="example maze"/>
+				</p>				
+				<p>
+					you can see that the entrance is always on the western side of the maze, the exit is always on the eastern side 
+					but the y position is randomly generated. the mazes always have the same width and height, 15.
+				</p>
+			</section>
+			
+			<section>
+				<h2>questions</h2>
+				<p>
+					please feel free to contact me if you have a question: leah [at] floppylab [dot] com
+				</p>
+				<p>
+					i will be happy if you share your opinion, ideas about it, too! :)
+					if you would like to send me your code, git repo, do it! :)
+				</p>
+				<p>
+					you can also contact me on twitter: <a href="https://twitter.com/LeonoraDer">@leonorader</a>
+				</p>
+				<p class="image-wrapper">
+					<img id="coins" th:src="@{/img/coins.png}" alt="3 coins"/>
+				</p>
+			</section>
+		</main>	
+	</body>
+	<footer th:replace="fragments/footer :: footer"></footer>
+</html>
