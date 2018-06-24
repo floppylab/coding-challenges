@@ -22,12 +22,10 @@ import javax.persistence.TemporalType;
 
 import codingchallanges.common.Position;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "maze")
-@NoArgsConstructor
 public class Maze {
 	
 	@Id
@@ -58,6 +56,10 @@ public class Maze {
 	       @AttributeOverride(name="y", column=@Column(name="me_y"))
 	   })
 	private Position me;
+	
+	public Maze() {
+		
+	}
 	
 	public Maze(Integer size) {
 		this.size = size;

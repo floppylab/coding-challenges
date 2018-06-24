@@ -5,10 +5,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class MazeData {
 	
 	public static final long HOUR = 3600*1000;
@@ -30,6 +28,8 @@ public class MazeData {
 	private Date finishTime;
 	
 	private Status status;
+	
+	public MazeData() {}
 
 	public MazeData(Long id, Integer size, Integer coins, Integer bumps, Date creationTime, Date finishTime, Status status) {
 		super();
