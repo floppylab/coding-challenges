@@ -57,7 +57,7 @@ public class HomeController {
 			return new ModelAndView("registration", "user", userDto);
 		} 
 		else {
-			return new ModelAndView("/challanges/maze", "user", userDto);
+			return new ModelAndView("challanges/maze", "user", userDto);
 		}
 	}
 }
