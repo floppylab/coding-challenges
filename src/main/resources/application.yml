@@ -1,7 +1,7 @@
 spring:
   application:
     name: coding-challanges
-  datasource: 
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
+#  datasource: 
+#    url: ${JDBC_DATABASE_URL}
+#    username: ${JDBC_DATABASE_USERNAME}
+#    password: ${JDBC_DATABASE_PASSWORD}

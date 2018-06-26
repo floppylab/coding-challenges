@@ -2,6 +2,7 @@ package codingchallanges.maze;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
@@ -27,6 +28,9 @@ public class MazeServiceImpl implements MazeService {
 	@Autowired
 	private SecurityService securityService;
 	
+	@Autowired
+	private MazeCellService mazeCellService;
+	
 	@Override
 	public Maze findMaze(Long id) {
 		Maze maze = mazeRepository.getOne(id);
@@ -44,24 +48,12 @@ public class MazeServiceImpl implements MazeService {
 		Maze maze = MazeGenerator.generateMaze();
 		maze.setUsername(securityService.username());
 		mazeRepository.save(maze);
+		
+		Long id = maze.getId();
 		logger.error(maze.toString());
 		
 		// end game an hour later
-		new Timer().schedule( 
-			new java.util.TimerTask() {
-				@Override
-				public void run() {
-					if(maze.getStatus() == Status.STARTED) {
-						logger.error("time is over for maze " + maze.getId());
-						maze.setStatus(Status.LOST);
-						maze.setFinishTime(new Date());
-						mazeRepository.save(maze);
-						cancel();
-					}
-				}
-			}, 
-			3600000 
-		);
+		endMaze(id);
 		return maze;
 	}
 	
@@ -74,7 +66,7 @@ public class MazeServiceImpl implements MazeService {
 		Position me = maze.getMe();
 		Map<Direction, MazeCellType> steps = new HashMap<>();
 		for(Direction direction : Direction.values()) {
-			MazeCell cell = maze.getCell(me.getX() + direction.getX(), me.getY() + direction.getY());
+			MazeCell cell = mazeCellService.getCell(maze, me.getX() + direction.getX(), me.getY() + direction.getY());
 			// hide exit until 3 collected coins
 			if(cell.getType() == MazeCellType.EXIT && maze.getCoins() != 3) {
 				steps.put(direction, MazeCellType.WALL);
@@ -82,7 +74,6 @@ public class MazeServiceImpl implements MazeService {
 				steps.put(direction, cell.getType());
 			}
 		}
-		// logger.error(maze.toString());
 		return steps;		
 	}
 
@@ -95,25 +86,26 @@ public class MazeServiceImpl implements MazeService {
 		
 		Position me = maze.getMe();
 		Position newPosition = new Position(me.getX() + direction.getX(), me.getY() + direction.getY());
-		MazeCell cell = maze.getCell(newPosition);
+		MazeCell cell = mazeCellService.getCell(maze, newPosition);
 		
 		// if you bump into a wall or a closed door
 		if(cell.isWall() || cell.isEntrance() || (cell.isExit() && maze.getCoins() != 3)) {
 			handleBump(maze);
 		} else {
 			handleGoodStep(maze, newPosition, cell);
+			logger.error(maze.toString());
 		}		
 	}
 
 	@Override
 	public void pickUpCoin(Long id) {
 		Maze maze = mazeRepository.getOne(id);
-		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		if(!maze.getUsername().equals(securityService.username())) throw new ClientException("you are not in this maze");
+		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		
-		MazeCell me = maze.getCell(maze.getMe());
+		MazeCell me = mazeCellService.getCell(maze, maze.getMe());
 		if(me.isCoin()) {
-			maze.setCell(maze.getMe(), MazeCellType.EMPTY);
+			mazeCellService.setCell(maze, maze.getMe(), MazeCellType.EMPTY);
 			maze.setCoins(maze.getCoins() + 1);
 			mazeRepository.save(maze);
 		} else {
@@ -124,12 +116,21 @@ public class MazeServiceImpl implements MazeService {
 	@Override
 	public void giveUp(Long id) {
 		Maze maze = mazeRepository.getOne(id);
-		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		if(!maze.getUsername().equals(securityService.username())) throw new ClientException("you are not in this maze");
+		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		
 		maze.setStatus(Status.GAVE_UP);
 		maze.setFinishTime(new Date());
 		mazeRepository.save(maze);
+	}
+	
+	@Override
+	public List<MazeData> getHighScores() {
+		List<MazeData> highScores = mazeRepository.getHighScoresWon();
+		if(highScores.size() < 20) {
+			highScores.addAll(mazeRepository.getHighScoresNotWon());
+		}
+		return highScores.subList(0, 20);
 	}
 	
 	private void handleGoodStep(Maze maze, Position newPosition, MazeCell cell) {
@@ -138,7 +139,6 @@ public class MazeServiceImpl implements MazeService {
 			maze.setFinishTime(new Date());
 		}
 		maze.setMe(newPosition);
-		// logger.error(maze.toString());
 		mazeRepository.save(maze);
 	}
 
@@ -159,17 +159,36 @@ public class MazeServiceImpl implements MazeService {
 			int i = random.nextInt(maze.getSize() / 2) * 2 + 1; 
 			int j = random.nextInt(maze.getSize() / 2) * 2 + 1;
 			while(coinsAdded != 3) {
-				while(!maze.getCell(i, j).isEmpty()) {
+				while(!mazeCellService.getCell(maze, i, j).isEmpty()) {
 					i = random.nextInt(maze.getSize() / 2) * 2 + 1; 
 					j = random.nextInt(maze.getSize() / 2) * 2 + 1;
 				}
-				maze.setCell(i, j, MazeCellType.COIN);
+				mazeCellService.setCell(maze, i, j, MazeCellType.COIN);
 				coinsAdded++;
 			}
 		}
 		mazeRepository.save(maze);
-		// logger.error(maze.toString());
 		throw new ClientException("you bumped right into a wall or a closed door");
+	}
+	
+	private void endMaze(Long id) {
+		new Timer().schedule( 
+			new java.util.TimerTask() {
+				@Override
+				public void run() {
+					Maze maze = mazeRepository.getOne(id);
+					if(maze.getStatus() == Status.STARTED) {
+						logger.error("time is over for maze " + maze.getId());
+						maze.setStatus(Status.LOST);
+						maze.setFinishTime(new Date());
+					}
+					mazeCellService.deleteMazeCells(maze);
+					mazeRepository.save(maze);
+					cancel();
+				}
+			}, 
+			3600000 
+		);
 	}
 
 }

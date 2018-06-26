@@ -94,15 +94,25 @@ public class Maze {
         cells.remove(cell);
         cell.setMaze(null);
     }
+    
+    private MazeCell getStringCell(int i, int j) {
+    	for(int x = 0; x < size * size; x++) {
+			if(cells.get(x).getPosition().getX() == i && cells.get(x).getPosition().getY() == j) {
+				return cells.get(x);
+			}
+		}
+    	return null;
+    }
 	
 	@Override
 	public String toString() {
+		//Collections.sort(cells, (o1, o2) -> o1.getPosition().compareTo(o2.getPosition()));
 		StringBuffer maze = new StringBuffer();
-		maze.append('\n');
+		maze.append("maze " + id + ": \n");
 		for(int i = 0; i < size; i++) {
 			for(int j = 0; j < size; j++) {
 				if(me.getX() == i && me.getY() == j) maze.append(" M ");
-				else maze.append(getCell(i, j).getType());
+				else maze.append(getStringCell(i, j).getType());
 			}
 			maze.append('\n');
 		}

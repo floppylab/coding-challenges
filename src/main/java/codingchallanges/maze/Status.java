@@ -6,5 +6,4 @@ public enum Status {
 	LOST,
 	GAVE_UP,
 	WON;
-
 }
