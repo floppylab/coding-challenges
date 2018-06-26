@@ -29,9 +29,11 @@ public class MazeData {
 	
 	private Status status;
 	
+	private String username;
+	
 	public MazeData() {}
 
-	public MazeData(Long id, Integer size, Integer coins, Integer bumps, Date creationTime, Date finishTime, Status status) {
+	public MazeData(Long id, Integer size, Integer coins, Integer bumps, Date creationTime, Date finishTime, Status status, String username) {
 		super();
 		this.id = id;
 		this.coins = coins;
@@ -40,6 +42,7 @@ public class MazeData {
 		this.finishTime = finishTime;
 		this.status = status;
 		this.size = size;
+		this.username = username;
 		
 		// calculate secondsLeft
 		Long now = new Date().getTime();

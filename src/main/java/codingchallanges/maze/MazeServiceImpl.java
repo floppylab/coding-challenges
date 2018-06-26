@@ -127,10 +127,10 @@ public class MazeServiceImpl implements MazeService {
 	@Override
 	public List<MazeData> getHighScores() {
 		List<MazeData> highScores = mazeRepository.getHighScoresWon();
-		if(highScores.size() < 20) {
+		if(highScores.size() < 10) {
 			highScores.addAll(mazeRepository.getHighScoresNotWon());
 		}
-		return highScores.subList(0, 20);
+		return highScores.size() > 10 ? highScores.subList(0, 10) : highScores;
 	}
 	
 	private void handleGoodStep(Maze maze, Position newPosition, MazeCell cell) {

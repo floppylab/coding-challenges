@@ -67,6 +67,11 @@ button {
     margin-top: 15px;
 }
 
+table {
+	width: 100%;
+    text-align: center;
+}
+
 .image-wrapper {
 	text-align: center;
 }

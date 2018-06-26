@@ -23,6 +23,26 @@
 			</section>
 			
 			<section>
+				<h2>high score</h2>
+			    <table>
+			        <tr>
+			            <th>id</th>
+			            <th>username</th>
+			            <th>coins</th>
+			            <th>bumps</th>
+			            <th>status</th>
+			        </tr>
+			        <tr th:each="highScore : ${highScores}">
+			            <td th:text="${highScore.id}"></td>
+			            <td th:text="${highScore.username}"></td>
+			            <td th:text="${highScore.coins}"></td>
+			            <td th:text="${highScore.bumps}"></td>
+			            <td th:text="${highScore.status}"></td>
+			        </tr>
+			    </table>
+			</section>
+			
+			<section>
 				<h2>how to not "maze over"?</h2>
 				<p>
 					there is an API though you can control your steps, but you can only access it if you have already registered 
