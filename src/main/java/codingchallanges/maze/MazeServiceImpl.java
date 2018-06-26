@@ -57,6 +57,11 @@ public class MazeServiceImpl implements MazeService {
 					
 				@Override
 				public void run() {
+					if(maze.getStatus() == Status.STARTED) {
+						logger.error("time is over for maze " + maze.getId());
+						maze.setStatus(Status.LOST);
+						maze.setFinishTime(new Date());
+					}
 					mazeCellService.deleteMazeCells(maze);
 					Maze olderMaze = mazeRepository.getOne(maze.getId());
 					if(olderMaze.getStatus() == Status.STARTED) {
@@ -68,7 +73,7 @@ public class MazeServiceImpl implements MazeService {
 					cancel();
 				}
 			}, 
-			3600000 
+			3600000  
 		);
 		return maze;
 	}
