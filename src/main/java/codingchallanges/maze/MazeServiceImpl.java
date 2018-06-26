@@ -49,11 +49,27 @@ public class MazeServiceImpl implements MazeService {
 		maze.setUsername(securityService.username());
 		mazeRepository.save(maze);
 		
-		Long id = maze.getId();
 		logger.error(maze.toString());
 		
 		// end game an hour later
-		endMaze(id);
+		new Timer().schedule( 	
+			new java.util.TimerTask() {
+					
+				@Override
+				public void run() {
+					mazeCellService.deleteMazeCells(maze);
+					Maze olderMaze = mazeRepository.getOne(maze.getId());
+					if(olderMaze.getStatus() == Status.STARTED) {
+						logger.error("time is over for maze " + olderMaze.getId());
+						olderMaze.setStatus(Status.LOST);
+						olderMaze.setFinishTime(new Date());
+					}
+					mazeRepository.save(olderMaze);
+					cancel();
+				}
+			}, 
+			3600000 
+		);
 		return maze;
 	}
 	
@@ -173,25 +189,5 @@ public class MazeServiceImpl implements MazeService {
 		throw new ClientException("you bumped right into a wall or a closed door");
 	}
 	
-	private void endMaze(Long id) {
-		new Timer().schedule( 
-			new java.util.TimerTask() {
-				@Override
-				public void run() {
-					Maze maze = mazeRepository.getOne(id);
-					if(maze.getStatus() == Status.STARTED) {
-						logger.error("time is over for maze " + maze.getId());
-						maze.setStatus(Status.LOST);
-						maze.setFinishTime(new Date());
-					}
-					mazeCellService.deleteMazeCells(maze);
-					mazeRepository.save(maze);
-					cancel();
-				}
-			}, 
-			3600000 
-		);
-	}
-
 }
 
