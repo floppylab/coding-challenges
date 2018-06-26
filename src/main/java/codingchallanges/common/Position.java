@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"x", "y"})
-public class Position implements Serializable/*, Comparable<Position>*/ {
+public class Position implements Serializable {
 
 	private static final long serialVersionUID = 0L;
 
@@ -25,10 +25,6 @@ public class Position implements Serializable/*, Comparable<Position>*/ {
 	@NotNull
 	private Integer y;
 
-//	@Override
-//	public int compareTo(Position position) {
-//		return null ;
-//	}
 }
 
 

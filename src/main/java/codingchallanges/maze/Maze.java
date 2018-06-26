@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import codingchallanges.common.Position;
 import lombok.Data;
@@ -59,30 +60,48 @@ public class Maze {
 	
 	private String username;
 	
+	@Transient
+	private CellIndex[][] mazeCells;
+	
 	public Maze() {}
 	
 	public Maze(Integer size) {
 		this.size = size;
 	}
 	
+	public void fillUpMazeCells() {
+		if (mazeCells != null) return;
+		mazeCells = new CellIndex[size][size];
+		for(int i = 0; i < size * size; i++) {
+			MazeCell cell = cells.get(i);
+			mazeCells[cell.getPosition().getX()][cell.getPosition().getY()] = new CellIndex(i, cell);
+		}
+	}
+	
 	public MazeCell getCell(int x, int y) {
-		return cells.get(x * size + y);
+		fillUpMazeCells();
+		return mazeCells[x][y].getCell();
 	}
 	
 	public MazeCell getCell(Position position) {
-		return cells.get(position.getX() * size + position.getY());
+		fillUpMazeCells();
+		return mazeCells[position.getX()][position.getY()].getCell();
 	}
 	
 	public void setCell(int x, int y, MazeCellType type) {
-		MazeCell cell = getCell(x, y);
+		fillUpMazeCells();
+		CellIndex cellIndex = mazeCells[x][y];
+		MazeCell cell = cellIndex.getCell();
 		cell.setType(type);
-		cells.set(x * size + y, cell);
+		cells.set(cellIndex.getIndex(), cell);
 	}
 	
 	public void setCell(Position position, MazeCellType type) {
-		MazeCell cell = getCell(position);
+		fillUpMazeCells();
+		CellIndex cellIndex = mazeCells[position.getX()][position.getY()];
+		MazeCell cell = cellIndex.getCell();
 		cell.setType(type);
-		cells.set(position.getX() * size + position.getY(), cell);
+		cells.set(cellIndex.getIndex(), cell);
 	}
 	
 	public void addCell(MazeCell cell) {
@@ -94,25 +113,16 @@ public class Maze {
         cells.remove(cell);
         cell.setMaze(null);
     }
-    
-    private MazeCell getStringCell(int i, int j) {
-    	for(int x = 0; x < size * size; x++) {
-			if(cells.get(x).getPosition().getX() == i && cells.get(x).getPosition().getY() == j) {
-				return cells.get(x);
-			}
-		}
-    	return null;
-    }
 	
 	@Override
 	public String toString() {
-		//Collections.sort(cells, (o1, o2) -> o1.getPosition().compareTo(o2.getPosition()));
+		fillUpMazeCells();
 		StringBuffer maze = new StringBuffer();
 		maze.append("maze " + id + ": \n");
 		for(int i = 0; i < size; i++) {
 			for(int j = 0; j < size; j++) {
 				if(me.getX() == i && me.getY() == j) maze.append(" M ");
-				else maze.append(getStringCell(i, j).getType());
+				else maze.append(mazeCells[i][j].getCell().getType());
 			}
 			maze.append('\n');
 		}

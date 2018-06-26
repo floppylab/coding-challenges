@@ -66,7 +66,7 @@ public class MazeServiceImpl implements MazeService {
 		Position me = maze.getMe();
 		Map<Direction, MazeCellType> steps = new HashMap<>();
 		for(Direction direction : Direction.values()) {
-			MazeCell cell = mazeCellService.getCell(maze, me.getX() + direction.getX(), me.getY() + direction.getY());
+			MazeCell cell = maze.getCell(me.getX() + direction.getX(), me.getY() + direction.getY());
 			// hide exit until 3 collected coins
 			if(cell.getType() == MazeCellType.EXIT && maze.getCoins() != 3) {
 				steps.put(direction, MazeCellType.WALL);
@@ -86,7 +86,7 @@ public class MazeServiceImpl implements MazeService {
 		
 		Position me = maze.getMe();
 		Position newPosition = new Position(me.getX() + direction.getX(), me.getY() + direction.getY());
-		MazeCell cell = mazeCellService.getCell(maze, newPosition);
+		MazeCell cell = maze.getCell(newPosition);
 		
 		// if you bump into a wall or a closed door
 		if(cell.isWall() || cell.isEntrance() || (cell.isExit() && maze.getCoins() != 3)) {
@@ -103,9 +103,9 @@ public class MazeServiceImpl implements MazeService {
 		if(!maze.getUsername().equals(securityService.username())) throw new ClientException("you are not in this maze");
 		if(maze.getStatus() != Status.STARTED) throw new ClientException("maze over");
 		
-		MazeCell me = mazeCellService.getCell(maze, maze.getMe());
+		MazeCell me = maze.getCell(maze.getMe());
 		if(me.isCoin()) {
-			mazeCellService.setCell(maze, maze.getMe(), MazeCellType.EMPTY);
+			maze.setCell(maze.getMe(), MazeCellType.EMPTY);
 			maze.setCoins(maze.getCoins() + 1);
 			mazeRepository.save(maze);
 		} else {
@@ -150,7 +150,9 @@ public class MazeServiceImpl implements MazeService {
 			
 			// collect all coins
 			for(MazeCell mazeCell : maze.getCells()) {
-				if (mazeCell.isCoin()) mazeCell.setType(MazeCellType.EMPTY);
+				if (mazeCell.isCoin()) {
+					maze.setCell(mazeCell.getPosition(), MazeCellType.EMPTY);
+				}
 			}
 			
 			// leave coins randomly
@@ -159,11 +161,11 @@ public class MazeServiceImpl implements MazeService {
 			int i = random.nextInt(maze.getSize() / 2) * 2 + 1; 
 			int j = random.nextInt(maze.getSize() / 2) * 2 + 1;
 			while(coinsAdded != 3) {
-				while(!mazeCellService.getCell(maze, i, j).isEmpty()) {
+				while(!maze.getCell(i, j).isEmpty()) {
 					i = random.nextInt(maze.getSize() / 2) * 2 + 1; 
 					j = random.nextInt(maze.getSize() / 2) * 2 + 1;
 				}
-				mazeCellService.setCell(maze, i, j, MazeCellType.COIN);
+				maze.setCell(i, j, MazeCellType.COIN);
 				coinsAdded++;
 			}
 		}
