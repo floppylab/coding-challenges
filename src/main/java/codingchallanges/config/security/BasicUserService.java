@@ -12,28 +12,35 @@ import codingchallanges.exception.UsernameExistsException;
 @Service
 public class BasicUserService {
 
-	@Autowired
-	private BasicUserRepository userRepository;
+    @Autowired
+    private BasicUserRepository userRepository;
 
-	public BasicUser createUserAccount(@Valid BasicUserDto userDto) {
-		if(!userDto.getPassword().equals(userDto.getMatchingPassword())) {
-			throw new NonMatchingPasswordsException("passwords do not match");
-		}
-		if (usernameExist(userDto.getUsername())) {   
+    /**
+     * Creates and saves a new user.
+     * Checks if passwords are the same and if the given username already exists.
+     * 
+     * @param userDto user to save
+     * @return saved user
+     */
+    public BasicUser createUserAccount(@Valid BasicUserDto userDto) {
+        if (!userDto.getPassword().equals(userDto.getMatchingPassword())) {
+            throw new NonMatchingPasswordsException("passwords do not match");
+        }
+        if (usernameExist(userDto.getUsername())) {
             throw new UsernameExistsException("there is a user with that username:"  + userDto.getUsername());
         }
-        BasicUser user = new BasicUser();    
+        BasicUser user = new BasicUser();
         user.setUsername(userDto.getUsername());
         user.setBcrypthash(new BCryptPasswordEncoder(11).encode(userDto.getPassword()));
-        return userRepository.save(user); 
-	}
+        return userRepository.save(user);
+    }
 
-	private boolean usernameExist(String username) {
-		BasicUser user = userRepository.findByUsername(username);
-		if (user != null) {
-			return true;
-		}
-		return false;
-	}
+    private boolean usernameExist(String username) {
+        BasicUser user = userRepository.findByUsername(username);
+        if (user != null) {
+            return true;
+        }
+        return false;
+    }
 
 }

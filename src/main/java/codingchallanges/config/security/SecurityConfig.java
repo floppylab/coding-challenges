@@ -15,53 +15,63 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private BasicUserDetailsService userDetailsService;
+    @Autowired
+    private BasicUserDetailsService userDetailsService;
 
-	@Configuration
-	@Order(1)
-	public class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
-		protected void configure(HttpSecurity http) throws Exception {
-			http
-			.csrf().disable()
-			.authenticationProvider(userAuthenticationProvider())
-			.antMatcher("/api/**")
-			.authorizeRequests()
-			.anyRequest().authenticated()
-			.and().httpBasic();
-		}
-	}
+    @Configuration
+    @Order(1)
+    public class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+            .csrf().disable()
+            .authenticationProvider(userAuthenticationProvider())
+            .antMatcher("/api/**")
+            .authorizeRequests()
+            .anyRequest().authenticated()
+            .and().httpBasic();
+        }
+    }
 
-	@Configuration
-	public class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    @Configuration
+    public class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests()
-			.antMatchers("/", "/challanges/**").permitAll()
-	        .antMatchers("/registration").permitAll()
-	        .antMatchers("/swagger-ui.html", "/swagger", "/webjars/**").permitAll()
-	        .antMatchers("/swagger-resources/**").permitAll()
-	        .antMatchers("/css/**").permitAll()
-	        .antMatchers("/img/**").permitAll()
-	        .anyRequest().authenticated()
-	        .and()
-	        .csrf().disable();
-		}
-	}
-	
-	@Bean
-	public AuthenticationProvider userAuthenticationProvider() {
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(encoder());
-		return authProvider;
-	}
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.authorizeRequests()
+            .antMatchers("/", "/challanges/**").permitAll()
+            .antMatchers("/registration").permitAll()
+            .antMatchers("/swagger-ui.html", "/swagger", "/webjars/**").permitAll()
+            .antMatchers("/swagger-resources/**").permitAll()
+            .antMatchers("/css/**").permitAll()
+            .antMatchers("/img/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .csrf().disable();
+        }
+    }
 
-	@Bean
-	public PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder(11);
-	}
+    /**
+     * Authentication provider bean.
+     * 
+     * @return authentication provider bean
+     */
+    @Bean
+    public AuthenticationProvider userAuthenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(encoder());
+        return authProvider;
+    }
+
+    /**
+     * Password encoder bean.
+     * 
+     * @return password encoder bean
+     */
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder(11);
+    }
 
 }
 

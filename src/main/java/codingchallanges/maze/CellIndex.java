@@ -1,17 +1,14 @@
 package codingchallanges.maze;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class CellIndex {
-	
-	private int index;
-	
-	private MazeCell cell;
-	
-	public CellIndex(int index, MazeCell cell) {
-		this.index = index;
-		this.cell = cell;
-	}
+
+    private int index;
+
+    private MazeCell cell;
 
 }

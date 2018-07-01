@@ -17,14 +17,12 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = {"x", "y"})
 public class Position implements Serializable {
 
-	private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
 
-	@NotNull
-	private Integer x;
+    @NotNull
+    private Integer x;
 
-	@NotNull
-	private Integer y;
+    @NotNull
+    private Integer y;
 
 }
-
-

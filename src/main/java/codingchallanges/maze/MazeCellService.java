@@ -2,6 +2,11 @@ package codingchallanges.maze;
 
 public interface MazeCellService {
 
-	void deleteMazeCells(Maze maze);
+    /**
+    * Deletes maze cells by their maze.
+    * 
+    * @param maze maze of the cells
+    */
+    void deleteMazeCells(Maze maze);
 
 }

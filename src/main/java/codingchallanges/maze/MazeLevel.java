@@ -1,18 +1,24 @@
 package codingchallanges.maze;
 
 public enum MazeLevel {
-	
-	STARTER(15),
-	ADVANCED(31);
-	
-	private int size;
-	
-	private MazeLevel(int size) {
-		this.size = size;
-	}
-	
-	public int getSize() {
-		return size;
-	}
+
+    BEGINNER(7),
+    ADVANCED(15),
+    EXPERT(31);
+
+    private int size;
+
+    private MazeLevel(int size) {
+        this.size = size;
+    }
+
+    /**
+     * Returns the size of the maze.
+     * 
+     * @return size of the maze
+     */
+    public int getSize() {
+        return size;
+    }
 
 }

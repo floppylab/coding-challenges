@@ -10,19 +10,19 @@ import lombok.Data;
 @Data
 public class BasicUserDto {
 
-	@NotEmpty
-	@NotNull
-	@Length(min=3, max=30)
-	private String username;
+    @NotEmpty
+    @NotNull
+    @Length(min = 3, max = 30)
+    private String username;
 
-	@NotEmpty
-	@NotNull
-	@Length(min=8, max=30)
-	private String password;
-	
-	@NotEmpty
-	@NotNull
-	@Length(min=8, max=30)
-	private String matchingPassword;
+    @NotEmpty
+    @NotNull
+    @Length(min = 8, max = 30)
+    private String password;
+
+    @NotEmpty
+    @NotNull
+    @Length(min = 8, max = 30)
+    private String matchingPassword;
 
 }

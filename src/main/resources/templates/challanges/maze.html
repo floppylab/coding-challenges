@@ -31,6 +31,7 @@
 			            <th>coins</th>
 			            <th>bumps</th>
 			            <th>status</th>
+			            <th>size</th>
 			        </tr>
 			        <tr th:each="highScore : ${highScores}">
 			            <td th:text="${highScore.id}"></td>
@@ -38,6 +39,7 @@
 			            <td th:text="${highScore.coins}"></td>
 			            <td th:text="${highScore.bumps}"></td>
 			            <td th:text="${highScore.status}"></td>
+			            <td th:text="${highScore.size}"></td>
 			        </tr>
 			    </table>
 			</section>
@@ -55,9 +57,10 @@
 					<h3>- create a maze -</h3>
 					<small>POST - /api/mazes</small>
 					<p>
-						making a post call with an empty body will let you start the maze. you will find yourself at the entrance. 
-						as a response you will get the id of your maze.
-						this is when the door is closed behind you and you light your torch so your 3600 seconds starts
+						making a post call with an empty body will let you start the maze.
+						you will find yourself at the entrance and 	as a response you will get the id of your maze.
+						this is when the door is closed behind you and you light your torch so your 3600 seconds starts.
+						if you would like to specify the level of the maze, you can choose from 3: STARTER - 7 x 7, ADVANCED - 15 x 15 or EXPERT - 31 x 31. add the name of the level as a request parameter name 'level'
 					</p>
 				</article>
 				

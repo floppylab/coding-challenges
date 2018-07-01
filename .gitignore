@@ -10,6 +10,8 @@
 .springBeans
 .sts4-cache
 
+.checkstyle
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

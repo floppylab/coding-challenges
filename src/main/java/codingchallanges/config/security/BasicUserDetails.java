@@ -10,13 +10,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class BasicUserDetails implements UserDetails {
 
-	private static final long serialVersionUID = 1L;
-	
-	private String username;
-	private String bCryptHash;
+    private static final long serialVersionUID = 1L;
 
+    private String username;
+    private String bCryptHash;
+
+    /**
+     * Initializes the object from a BasicUser object.
+     * 
+     * @param user BasicUser object
+     */
     public BasicUserDetails(BasicUser user) {
-    	this.username = user.getUsername();
+        this.username = user.getUsername();
         this.bCryptHash = user.getBcrypthash();
     }
 
@@ -50,8 +55,8 @@ public class BasicUserDetails implements UserDetails {
         return Collections.unmodifiableList(Arrays.asList(new SimpleGrantedAuthority("BASIC_USER")));
     }
 
-	@Override
-	public String getUsername() {
-		return username;
-	}
+    @Override
+    public String getUsername() {
+        return username;
+    }
 }
