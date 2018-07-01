@@ -20,36 +20,6 @@ public interface MazeRepository extends JpaRepository<Maze, Long> {
     MazeData getMazeData(@Param("id") Long id);
 
     /**
-     * Returns a list of won mazes in the following order.
-     * <ul>
-     * <li>maze size descending</li>
-     * <li>number of coins collected descending</li>
-     * <li>number of bumps ascending</li>
-     * <li>finish time descending</li>
-     * </ul>
-     * 
-     * @return list of mazes
-     */
-    @Query("SELECT new codingchallanges.maze.MazeData(m.id, m.size, m.coins, m.bumps, m.creationTime, m.finishTime, m.status, m.username) FROM Maze m where m.status = 'WON' "
-            + " ORDER BY m.size desc, m.coins desc, m.bumps asc, m.finishTime desc")
-    List<MazeData> getHighScoresWon();
-
-    /**
-     * Returns a list of not won mazes in the following order.
-     * <ul>
-     * <li>maze size descending</li>
-     * <li>number of coins collected descending</li>
-     * <li>number of bumps ascending</li>
-     * <li>finish time descending</li>
-     * </ul>
-     * 
-     * @return list of mazes
-     */
-    @Query("SELECT new codingchallanges.maze.MazeData(m.id, m.size, m.coins, m.bumps, m.creationTime, m.finishTime, m.status, m.username) FROM Maze m where m.status != 'WON' "
-            + " ORDER BY m.size desc, m.coins desc, m.bumps asc, m.finishTime desc")
-    List<MazeData> getHighScoresNotWon();
-
-    /**
      * Returns a list of mazes that are currently in progress.
      * 
      * <ul>
@@ -60,5 +30,14 @@ public interface MazeRepository extends JpaRepository<Maze, Long> {
     @Query("SELECT new codingchallanges.maze.MazeData(m.id, m.size, m.coins, m.bumps, m.creationTime, m.finishTime, m.status, m.username) FROM Maze m "
         + " where m.status = 'STARTED'")
     List<MazeData> getMazesInProgress();
+
+    /**
+     * Returns the name of winning users by maze size.
+     * 
+     * @param size size of maze
+     * @return list of usernames
+     */
+    @Query("SELECT DISTINCT m.username FROM Maze m WHERE m.status = 'WON' and m.size = :size")
+    List<String> getWinnersByLevel(@Param("size") Integer size);
 
 }

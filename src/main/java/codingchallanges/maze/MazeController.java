@@ -21,7 +21,7 @@ public class MazeController {
      */
     @GetMapping("/maze")
     public String maze(Model model) {
-        model.addAttribute("highScores", mazeService.getHighScores());
+        model.addAttribute("winners", mazeService.getWinners());
         return "challanges/maze";
     }
 }

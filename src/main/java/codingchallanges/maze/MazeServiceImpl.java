@@ -115,12 +115,12 @@ public class MazeServiceImpl implements MazeService {
     }
 
     @Override
-    public List<MazeData> getHighScores() {
-        List<MazeData> highScores = mazeRepository.getHighScoresWon();
-        if (highScores.size() < 10) {
-            highScores.addAll(mazeRepository.getHighScoresNotWon());
+    public Map<MazeLevel, List<String>> getWinners() {
+        Map<MazeLevel, List<String>> winners = new HashMap<>();
+        for (MazeLevel level : MazeLevel.values()) {
+            winners.put(level, mazeRepository.getWinnersByLevel(level.getSize()));
         }
-        return highScores.size() > 10 ? highScores.subList(0, 10) : highScores;
+        return winners;
     }
 
     @Override

@@ -54,11 +54,11 @@ public interface MazeService {
     void giveUp(Long id);
 
     /**
-     * Returns an ordered list of mazes in the following order.
+     * Returns all-time winners by levels.
      * 
-     * @return list of mazes
+     * @return a map binding levels and the name of winners
      */
-    List<MazeData> getHighScores();
+    Map<MazeLevel, List<String>> getWinners();
 
     /**
      * Returns a list of mazes that are currently in progress.

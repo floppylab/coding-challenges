@@ -23,24 +23,15 @@
 			</section>
 			
 			<section>
-				<h2>high score</h2>
+				<h2>winners</h2>
 			    <table>
 			        <tr>
-			            <th>id</th>
-			            <th>username</th>
-			            <th>coins</th>
-			            <th>bumps</th>
-			            <th>status</th>
-			            <th>size</th>
+			            <th>level</th>
+			            <th>winners</th>
 			        </tr>
-			        <tr th:each="highScore : ${highScores}">
-			            <td th:text="${highScore.id}"></td>
-			            <td th:text="${highScore.username}"></td>
-			            <td th:text="${highScore.coins}"></td>
-			            <td th:text="${highScore.bumps}"></td>
-			            <td th:text="${highScore.status}"></td>
-			            <td th:text="${highScore.size}"></td>
-			        </tr>
+			        <tr th:each="pair : ${winners}">
+                        <td th:text="${pair.key}"></td>
+                        <td th:text="${#strings.listJoin(pair.value, ', ')}"></td>
 			    </table>
 			</section>
 			
