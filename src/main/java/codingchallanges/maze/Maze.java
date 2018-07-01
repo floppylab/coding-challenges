@@ -23,12 +23,10 @@ import javax.persistence.Transient;
 
 import codingchallanges.common.Position;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "maze")
-@NoArgsConstructor
 public class Maze {
 
     @Id
@@ -64,6 +62,8 @@ public class Maze {
 
     @Transient
     private CellIndex[][] mazeCells;
+
+    public Maze() {}
 
     public Maze(Integer size) {
         this.size = size;

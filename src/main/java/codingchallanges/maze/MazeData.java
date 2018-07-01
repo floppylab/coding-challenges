@@ -5,10 +5,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class MazeData {
 
     public static final long HOUR = 3600 * 1000;
@@ -32,6 +30,8 @@ public class MazeData {
     private Status status;
 
     private String username;
+
+    public MazeData() { }
 
     /**
      * Initializes MazeData object from database representation.

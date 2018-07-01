@@ -13,12 +13,10 @@ import javax.persistence.Table;
 
 import codingchallanges.common.Position;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "maze_cell")
-@NoArgsConstructor
 public class MazeCell {
 
     @Id
@@ -33,6 +31,8 @@ public class MazeCell {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maze_id")
     private Maze maze;
+
+    public MazeCell() {}
 
     public MazeCell(Position position, MazeCellType type) {
         super();
